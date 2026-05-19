@@ -1,0 +1,114 @@
+/* ── 기본 ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Pretendard', 'Noto Sans KR', sans-serif; background: #f4f6fb; color: #222; }
+a { color: inherit; text-decoration: none; }
+
+/* ── 네비 ── */
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0 32px; height: 56px;
+  background: #1e3a5f; color: #fff;
+}
+.nav-brand { font-weight: 700; font-size: 1.1rem; }
+.nav-links a { margin-left: 24px; opacity: .85; }
+.nav-links a:hover { opacity: 1; }
+
+/* ── 컨테이너 ── */
+.container { max-width: 860px; margin: 0 auto; padding: 32px 16px; }
+
+/* ── 카드 ── */
+.card {
+  background: #fff; border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07);
+  padding: 32px; margin-bottom: 24px;
+}
+.card h1 { font-size: 1.6rem; margin-bottom: 8px; color: #1e3a5f; }
+.card h2 { font-size: 1.2rem; margin-bottom: 16px; color: #1e3a5f; }
+.desc { color: #555; margin-bottom: 24px; }
+
+/* ── 버튼 ── */
+.btn {
+  display: inline-block; padding: 10px 20px; border-radius: 8px;
+  font-size: .95rem; font-weight: 600; cursor: pointer; border: none;
+  transition: opacity .15s;
+}
+.btn:hover { opacity: .85; }
+.btn-primary { background: #1e3a5f; color: #fff; }
+.btn-outline { background: #fff; color: #1e3a5f; border: 2px solid #1e3a5f; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-sm { padding: 6px 12px; font-size: .85rem; }
+
+/* ── 알림 ── */
+.alert { padding: 14px 18px; border-radius: 8px; margin-bottom: 20px; }
+.alert-success { background: #dcfce7; color: #166534; }
+.alert-warning { background: #fef9c3; color: #713f12; }
+.alert-error { background: #fee2e2; color: #991b1b; }
+.alert ul { padding-left: 18px; }
+
+/* ── 설문 문항 ── */
+.question-block { margin-bottom: 28px; }
+.q-label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 1rem; }
+.required { color: #ef4444; margin-left: 4px; }
+
+.scale-group { display: flex; gap: 12px; flex-wrap: wrap; }
+.scale-item { display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; }
+.scale-item input { width: 20px; height: 20px; cursor: pointer; }
+.scale-hint { display: flex; justify-content: space-between; margin-top: 4px; font-size: .8rem; color: #888; }
+
+.choice-group { display: flex; flex-direction: column; gap: 8px; }
+.choice-item { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.choice-item input { width: 18px; height: 18px; }
+
+textarea {
+  width: 100%; padding: 10px 14px; border: 1.5px solid #d1d5db;
+  border-radius: 8px; font-size: .95rem; resize: vertical;
+  font-family: inherit;
+}
+textarea:focus { outline: none; border-color: #1e3a5f; }
+
+input[type="text"], input[type="password"], select {
+  width: 100%; padding: 10px 14px; margin-bottom: 12px;
+  border: 1.5px solid #d1d5db; border-radius: 8px;
+  font-size: .95rem; font-family: inherit;
+}
+input:focus, select:focus { outline: none; border-color: #1e3a5f; }
+
+.form-footer { margin-top: 32px; text-align: center; }
+
+/* ── 결과 ── */
+.total-badge { font-size: 1rem; color: #555; }
+.avg-badge { margin-bottom: 12px; color: #1e3a5f; font-size: 1rem; }
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: center; }
+.count-table { display: flex; flex-direction: column; gap: 8px; }
+.count-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+.text-responses blockquote {
+  background: #f8fafc; border-left: 4px solid #1e3a5f;
+  padding: 10px 16px; margin-bottom: 10px; border-radius: 0 8px 8px 0;
+  color: #333; font-size: .95rem;
+}
+.muted { color: #aaa; font-style: italic; }
+
+/* ── 어드민 ── */
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.admin-header h1 { font-size: 1.6rem; color: #1e3a5f; }
+label { display: block; font-weight: 600; margin-bottom: 6px; margin-top: 12px; }
+.toggle-label { display: flex; align-items: center; gap: 8px; font-weight: 500; margin: 12px 0; }
+.toggle-label input { width: auto; }
+
+.q-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px;
+  background: #fafafa;
+}
+.drag-handle { cursor: grab; color: #aaa; font-size: 1.2rem; }
+.q-info { flex: 1; }
+.q-info strong { display: block; margin-bottom: 2px; }
+.q-info small { color: #888; }
+
+footer { text-align: center; padding: 24px; color: #aaa; font-size: .85rem; }
+
+@media (max-width: 600px) {
+  .chart-grid { grid-template-columns: 1fr; }
+  .navbar { padding: 0 16px; }
+  .card { padding: 20px; }
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}설문조사{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">📋 설문조사 시스템</a>
+    <div class="nav-links">
+      <a href="/">설문 참여</a>
+      <a href="/results">결과 보기</a>
+      <a href="/admin">관리자</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>© AA아키그룹 경영지원실</p>
+  </footer>
+</body>
+</html>

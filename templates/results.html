@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}설문 결과{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>📊 {{ meta.title }} — 결과</h1>
+  <p class="total-badge">총 응답 수: <strong>{{ total }}명</strong></p>
+</div>
+
+{% for s in stats %}
+<div class="card chart-card">
+  <h2>{{ loop.index }}. {{ s.text }}</h2>
+
+  {% if s.type == "scale" %}
+    <p class="avg-badge">평균: <strong>{{ s.average }}점</strong> / 5점</p>
+    <canvas id="chart-{{ s.id }}" height="120"></canvas>
+    <script>
+      new Chart(document.getElementById("chart-{{ s.id }}"), {
+        type: "bar",
+        data: {
+          labels: {{ s.labels | tojson }},
+          datasets: [{
+            label: "응답 수",
+            data: {{ s.values | tojson }},
+            backgroundColor: ["#ef4444","#f97316","#eab308","#22c55e","#3b82f6"]
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+        }
+      });
+    </script>
+
+  {% elif s.type == "choice" %}
+    <div class="chart-grid">
+      <canvas id="chart-{{ s.id }}" height="200"></canvas>
+      <div class="count-table">
+        {% for label, val in s.counts.items() %}
+          <div class="count-row">
+            <span>{{ label }}</span>
+            <span><strong>{{ val }}</strong>명
+              ({{ ((val / s.total * 100) | round(1)) if s.total > 0 else 0 }}%)
+            </span>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+    <script>
+      new Chart(document.getElementById("chart-{{ s.id }}"), {
+        type: "doughnut",
+        data: {
+          labels: {{ s.labels | tojson }},
+          datasets: [{
+            data: {{ s.values | tojson }},
+            backgroundColor: [
+              "#3b82f6","#22c55e","#f97316","#a855f7","#ef4444",
+              "#06b6d4","#eab308","#ec4899"
+            ]
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { position: "right" }
+          }
+        }
+      });
+    </script>
+
+  {% elif s.type == "text" %}
+    <div class="text-responses">
+      {% if s.texts %}
+        {% for t in s.texts %}
+          <blockquote>{{ t }}</blockquote>
+        {% endfor %}
+      {% else %}
+        <p class="muted">아직 응답이 없습니다.</p>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>
+{% endfor %}
+{% endblock %}

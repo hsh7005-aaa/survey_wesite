@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}{{ meta.title }}{% endblock %}
+
+{% block content %}
+<div class="card survey-card">
+  <h1>{{ meta.title }}</h1>
+  <p class="desc">{{ meta.description }}</p>
+
+  {% if closed %}
+    <div class="alert alert-warning">현재 설문이 마감되었습니다.</div>
+
+  {% elif submitted %}
+    <div class="alert alert-success">
+      <h2>✅ 제출이 완료되었습니다.</h2>
+      <p>소중한 의견 감사합니다.</p>
+      <a href="/" class="btn btn-outline">다시 참여하기</a>
+    </div>
+
+  {% else %}
+    {% if errors %}
+      <div class="alert alert-error">
+        <ul>{% for e in errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+
+    <form method="POST" action="/submit">
+      {% for q in questions %}
+        <div class="question-block">
+          <label class="q-label">
+            {{ loop.index }}. {{ q.text }}
+            {% if q.required %}<span class="required">*</span>{% endif %}
+          </label>
+
+          {% if q.type == "scale" %}
+            <div class="scale-group">
+              {% for opt in q.options %}
+                <label class="scale-item">
+                  <input type="radio" name="{{ q.id }}" value="{{ opt }}"
+                    {% if prev_answers and prev_answers.get(q.id) == opt %}checked{% endif %}>
+                  <span>{{ opt }}</span>
+                </label>
+              {% endfor %}
+            </div>
+            <div class="scale-hint">
+              <span>매우 불만족</span><span>매우 만족</span>
+            </div>
+
+          {% elif q.type == "choice" %}
+            <div class="choice-group">
+              {% for opt in q.options %}
+                <label class="choice-item">
+                  <input type="radio" name="{{ q.id }}" value="{{ opt }}"
+                    {% if prev_answers and prev_answers.get(q.id) == opt %}checked{% endif %}>
+                  {{ opt }}
+                </label>
+              {% endfor %}
+            </div>
+
+          {% elif q.type == "text" %}
+            <textarea name="{{ q.id }}" rows="4" placeholder="자유롭게 작성해주세요">{{ prev_answers.get(q.id, '') if prev_answers else '' }}</textarea>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="form-footer">
+        <button type="submit" class="btn btn-primary">제출하기</button>
+      </div>
+    </form>
+  {% endif %}
+</div>
+{% endblock %}

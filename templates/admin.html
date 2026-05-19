@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}관리자{% endblock %}
+
+{% block content %}
+
+{% if page == "login" %}
+<div class="card" style="max-width:400px;margin:60px auto;">
+  <h2>🔐 관리자 로그인</h2>
+  {% if error %}<div class="alert alert-error">{{ error }}</div>{% endif %}
+  <form method="POST">
+    <label>비밀번호</label>
+    <input type="password" name="password" placeholder="관리자 비밀번호" autofocus>
+    <button type="submit" class="btn btn-primary" style="margin-top:12px;width:100%">로그인</button>
+  </form>
+</div>
+
+{% elif page == "dashboard" %}
+<div class="admin-header">
+  <h1>⚙️ 설문 관리자</h1>
+  <div>
+    <a href="/results" class="btn btn-outline">결과 보기</a>
+    <a href="/admin/responses/export" class="btn btn-outline">CSV 내보내기</a>
+    <a href="/admin/logout" class="btn btn-danger">로그아웃</a>
+  </div>
+</div>
+
+<!-- 설문 기본 정보 -->
+<div class="card">
+  <h2>📝 설문 기본 정보</h2>
+  <form method="POST" action="/admin/meta">
+    <label>설문 제목</label>
+    <input type="text" name="title" value="{{ meta.title }}">
+    <label>안내 문구</label>
+    <textarea name="description" rows="2">{{ meta.description }}</textarea>
+    <label class="toggle-label">
+      <input type="checkbox" name="active" {% if meta.active %}checked{% endif %}>
+      설문 활성화 (체크 해제 시 마감)
+    </label>
+    <button type="submit" class="btn btn-primary">저장</button>
+  </form>
+</div>
+
+<!-- 현재 문항 목록 -->
+<div class="card">
+  <h2>📋 문항 목록 (총 {{ questions|length }}개 / 응답 {{ total }}건)</h2>
+  <div id="question-list">
+    {% for q in questions %}
+    <div class="q-item" data-id="{{ q.id }}">
+      <span class="drag-handle">☰</span>
+      <div class="q-info">
+        <strong>{{ loop.index }}. {{ q.text }}</strong>
+        <small>[{{ q.type }}] {% if q.required %}필수{% else %}선택{% endif %}
+          {% if q.options %} | 보기: {{ q.options | join(", ") }}{% endif %}
+        </small>
+      </div>
+      <form method="POST" action="/admin/questions/delete/{{ q.id }}"
+            onsubmit="return confirm('삭제하시겠습니까?')">
+        <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+      </form>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- 문항 추가 -->
+<div class="card">
+  <h2>➕ 문항 추가</h2>
+  <form method="POST" action="/admin/questions/add">
+    <label>문항 내용</label>
+    <input type="text" name="text" placeholder="질문을 입력하세요" required>
+
+    <label>유형</label>
+    <select name="type" id="q-type" onchange="toggleOptions()">
+      <option value="choice">객관식 (choice)</option>
+      <option value="scale">척도 (scale 1~5)</option>
+      <option value="text">주관식 (text)</option>
+    </select>
+
+    <div id="options-area">
+      <label>보기 항목 (한 줄에 하나씩)</label>
+      <textarea name="options" rows="4" placeholder="예)\n설계1팀\n설계2팀\n구조팀"></textarea>
+    </div>
+
+    <label class="toggle-label">
+      <input type="checkbox" name="required" checked> 필수 항목
+    </label>
+    <button type="submit" class="btn btn-primary">추가</button>
+  </form>
+</div>
+
+<!-- 응답 초기화 -->
+<div class="card">
+  <h2>🗑️ 응답 데이터 관리</h2>
+  <p>현재 저장된 응답: <strong>{{ total }}건</strong></p>
+  <form method="POST" action="/admin/responses/clear"
+        onsubmit="return confirm('모든 응답 데이터를 삭제합니다. 계속하시겠습니까?')">
+    <button type="submit" class="btn btn-danger">전체 응답 초기화</button>
+  </form>
+</div>
+
+<script>
+function toggleOptions() {
+  const t = document.getElementById("q-type").value;
+  document.getElementById("options-area").style.display =
+    t === "text" ? "none" : "block";
+}
+toggleOptions();
+
+// 드래그 순서 저장 (간단 구현)
+document.querySelectorAll(".q-item").forEach(item => {
+  item.setAttribute("draggable", true);
+});
+</script>
+{% endif %}
+
+{% endblock %}
